@@ -259,7 +259,7 @@ function handleEscClose(evt) {
   }
 }
 
-//limpiar span
+//limpia mensaje de error
 function clearValidation() {
   const formList = Array.from(document.querySelectorAll(".popup__form"));
 
