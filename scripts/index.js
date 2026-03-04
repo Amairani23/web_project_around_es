@@ -51,7 +51,10 @@ function closeModal(modalElement) {
 
 openEditModal.addEventListener("click", handleOpenEditModal);
 
-closeEditModal.addEventListener("click", handleProfileFormSubmit);
+closeEditModal.addEventListener("click", () => {
+  closeModal(editModal);
+  // editModal es tu modal específico
+});
 
 function fillProfileForm() {
   nameInput.value = profileTitle.textContent;
@@ -64,15 +67,13 @@ function handleOpenEditModal() {
 }
 
 function handleProfileFormSubmit(evt) {
-  evt.preventDefault();
-
   profileTitle.textContent = nameInput.value;
   profileDescription.textContent = descriptionInput.value;
 
   closeModal(editModal);
 }
 
-formElement.addEventListener("submit", handleProfileFormSubmit);
+//formElement.addEventListener("submit", handleProfileFormSubmit);
 
 const cardContainer = document.querySelector(".cards");
 const cardsTemplate = document.querySelector("#cards-template");
@@ -155,4 +156,68 @@ function handleCardFormSubmit(evt) {
   closeModal(cardPopup);
 }
 
-formNewCard.addEventListener("submit", handleCardFormSubmit);
+//formNewCard.addEventListener("submit", handleCardFormSubmit);
+
+//Validacion de formulario Edit
+
+document.querySelectorAll(".popup__form").forEach((form) => {
+  enableValidation(form);
+});
+
+function enableValidation(formElement) {
+  const inputs = formElement.querySelectorAll(".form__input");
+  const submitButton = formElement.querySelector(".form__button--submit");
+  const editButton = formElement.querySelector(".edit-button");
+  const newButton = formElement.querySelector(".new-button");
+
+  function showInputError(inputElement, errorMessage) {
+    const errorElement = formElement.querySelector(
+      `.${inputElement.id}-input-error`,
+    );
+
+    inputElement.classList.add("form__input_type_error");
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add("form__input-error_active");
+  }
+
+  function hideInputError(inputElement) {
+    const errorElement = formElement.querySelector(
+      `.${inputElement.id}-input-error`,
+    );
+    inputElement.classList.remove("form__input_type_error");
+    errorElement.textContent = "";
+    errorElement.classList.remove("form__input-error_active");
+  }
+
+  function toggleButtonState() {
+    const allValid = Array.from(inputs).every((input) => input.validity.valid);
+    submitButton.disabled = !allValid;
+  }
+
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      if (!input.validity.valid) {
+        showInputError(input, input.validationMessage);
+      } else {
+        hideInputError(input);
+      }
+      toggleButtonState();
+    });
+  });
+
+  formElement.addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    if (!formElement.checkValidity()) {
+      inputs.forEach((input) => {
+        if (!input.validity.valid) {
+          showInputError(input);
+        }
+      });
+      return;
+    }
+
+    handleProfileFormSubmit();
+  });
+}
+//Validacion de formulario Edit
