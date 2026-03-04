@@ -43,11 +43,14 @@ const editForm = document.querySelector("#edit-profile-form");
 function openModal(modalElement) {
   modalElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscClose);
+  clearValidation();
+  formNewCard.reset();
 }
 
 function closeModal(modalElement) {
   modalElement.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", handleEscClose);
+  clearValidation();
 }
 
 openEditModal.addEventListener("click", handleOpenEditModal);
@@ -190,7 +193,6 @@ function showInputError(formElement, inputElement, errorMessage) {
   const errorElement = formElement.querySelector(
     `.${inputElement.id}-input-error`,
   );
-
   inputElement.classList.add("popup__input_type_error");
   errorElement.textContent = errorMessage;
   errorElement.classList.add("popup__input-error_active");
@@ -255,4 +257,20 @@ function handleEscClose(evt) {
       closeModal(openedPopup);
     }
   }
+}
+
+//limpiar span
+function clearValidation() {
+  const formList = Array.from(document.querySelectorAll(".popup__form"));
+
+  formList.forEach((formElement) => {
+    const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+    const buttonElement = formElement.querySelector(".popup__button");
+
+    inputList.forEach((inputElement) => {
+      hideInputError(formElement, inputElement);
+    });
+
+    toggleButtonState(inputList, buttonElement);
+  });
 }
