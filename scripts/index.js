@@ -274,3 +274,112 @@ function clearValidation() {
     toggleButtonState(inputList, buttonElement);
   });
 }
+
+class Card {
+  constructor(data, cardSelector) {
+    this._name = data.name;
+    this._link = data.link;
+    this._cardSelector = cardSelector;
+  }
+
+  _getTemplate() {
+    return document
+      .querySelector(this._cardSelector)
+      .content.querySelector(".card")
+      .cloneNode(true);
+  }
+
+  generateCard() {
+    this._element = this._getTemplate();
+    this._setEventListeners();
+
+    this._element.querySelector(".card__image").src = this._link;
+    this._element.querySelector(".card__title").textContent = this._name;
+
+    return this._element;
+  }
+
+  _handleLikeClick() {
+    this._element
+      .querySelector(".card__like-button")
+      .classList.toggle("card__like-button_is-active");
+  }
+
+  _handleDeleteClick() {
+    this._element.remove();
+  }
+
+  _setEventListeners() {
+    this._element
+      .querySelector(".card__like-button")
+      .addEventListener("click", () => {
+        this._handleLikeClick();
+      });
+
+    this._element
+      .querySelector(".card__delete-button")
+      .addEventListener("click", () => {
+        this._handleDeleteClick();
+      });
+  }
+}
+
+initialCards.forEach((item) => {
+  const card = new Card(item, "#cards-template");
+  const cardElement = card.generateCard();
+
+  document.querySelector(".cards__list").prepend(cardElement);
+});
+
+//Validador
+class FormValidator {
+  constructor(config, formElement) {
+    this._formElement = formElement;
+    this._errorClass = config.errorClass;
+    this._inputErrorClass = config.inputErrorClass;
+  }
+
+  _enableValidation(inputElement) {
+    if (!inputElement.validity.valid) {
+      this._showInputError(inputElement, inputElement.validationMessage);
+    } else {
+      this._hideInputError(inputElement);
+    }
+  }
+
+  // Método privado para mostrar error
+  _showInputError(inputElement, errorMessage) {
+    const errorElement = this._formElement.querySelector(
+      `.${inputElement.id}-error`,
+    );
+    inputElement.classList.add(this._inputErrorClass);
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add(this._errorClass);
+  }
+
+  // Método privado para ocultar error
+  _hideInputError(inputElement) {
+    const errorElement = this._formElement.querySelector(
+      `.${inputElement.id}-error`,
+    );
+    inputElement.classList.remove(this._inputErrorClass);
+    errorElement.classList.remove(this._errorClass);
+    errorElement.textContent = "";
+  }
+
+  _handleBtnSubmit() {
+    if (this._enableValidation) {
+      this._element
+        .querySelector(".popup__button")
+        .classList.toggle("popup__submit_disabled");
+    }
+  }
+
+  setEventListeners() {
+    this._element
+      .querySelector(".popup__button")
+      .addEventListener("click", () => {
+        this._handleBtnSubmit();
+      });
+  }
+}
