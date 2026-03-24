@@ -37,6 +37,13 @@ export class FormValidator {
     }
   }
 
+  //Inicia limpiando los mensajes de error
+  _clearValdation() {
+    this._inputList.forEach((inputElement) => {
+      this._hideInputError(inputElement);
+    });
+  }
+
   // Revisa si todo el formulario es válido
   _hasInvalidInput() {
     return this._inputList.some((inputElement) => !inputElement.validity.valid);
@@ -66,6 +73,7 @@ export class FormValidator {
   // Inicializa validación del formulario
   setEventListeners() {
     this._setInputListeners();
+    this._clearValdation();
     this._toggleButtonState(); // inicializa el estado del botón
     this._formElement.addEventListener("submit", (evt) => {
       if (this._hasInvalidInput()) {

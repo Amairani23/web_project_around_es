@@ -46,14 +46,14 @@ const editForm = document.querySelector("#edit-profile-form");
 function openModal(modalElement) {
   modalElement.classList.add("popup_is-opened");
   document.addEventListener("keydown", handleEscClose);
-  clearValidation();
+  //clearValidation();
   formNewCard.reset();
 }
 
 function closeModal(modalElement) {
   modalElement.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", handleEscClose);
-  clearValidation();
+  //clearValidation();
 }
 
 openEditModal.addEventListener("click", handleOpenEditModal);
@@ -168,69 +168,85 @@ function handleCardFormSubmit(evt) {
 formNewCard.addEventListener("submit", handleCardFormSubmit);
 
 //validación del formulario
-const formList = Array.from(document.querySelectorAll(".popup__form"));
+// const formList = Array.from(document.querySelectorAll(".popup__form"));
 
-formList.forEach((formElement) => {
-  const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-  const buttonElement = formElement.querySelector(".popup__button");
+// formList.forEach((formElement) => {
+//   const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+//   const buttonElement = formElement.querySelector(".popup__button");
 
-  inputList.forEach((inputElement) => {
-    inputElement.addEventListener("input", function () {
-      if (!inputElement.validity.valid) {
-        showInputError(
-          formElement,
-          inputElement,
-          inputElement.validationMessage,
-        );
-      } else {
-        hideInputError(formElement, inputElement);
-      }
+//   inputList.forEach((inputElement) => {
+//     inputElement.addEventListener("input", function () {
+//       if (!inputElement.validity.valid) {
+//         showInputError(
+//           formElement,
+//           inputElement,
+//           inputElement.validationMessage,
+//         );
+//       } else {
+//         hideInputError(formElement, inputElement);
+//       }
 
-      toggleButtonState(inputList, buttonElement);
-    });
-  });
-});
+//       toggleButtonState(inputList, buttonElement);
+//     });
+//   });
+// });
 
-//Mostrar mensaje de error
-function showInputError(formElement, inputElement, errorMessage) {
-  const errorElement = formElement.querySelector(
-    `.${inputElement.id}-input-error`,
-  );
-  inputElement.classList.add("popup__input_type_error");
-  errorElement.textContent = errorMessage;
-  errorElement.classList.add("popup__input-error_active");
-}
+// //Mostrar mensaje de error
+// function showInputError(formElement, inputElement, errorMessage) {
+//   const errorElement = formElement.querySelector(
+//     `.${inputElement.id}-input-error`,
+//   );
+//   inputElement.classList.add("popup__input_type_error");
+//   errorElement.textContent = errorMessage;
+//   errorElement.classList.add("popup__input-error_active");
+// }
 
-//Ocultar mensaje de error
-function hideInputError(formElement, inputElement) {
-  const errorElement = formElement.querySelector(
-    `.${inputElement.id}-input-error`,
-  );
+// //Ocultar mensaje de error
+// function hideInputError(formElement, inputElement) {
+//   const errorElement = formElement.querySelector(
+//     `.${inputElement.id}-input-error`,
+//   );
 
-  inputElement.classList.remove("popup__input_type_error");
-  errorElement.textContent = "";
-  errorElement.classList.remove("popup__input-error_active");
-}
+//   inputElement.classList.remove("popup__input_type_error");
+//   errorElement.textContent = "";
+//   errorElement.classList.remove("popup__input-error_active");
+// }
 
-//Deshabilitar el Botón
-function toggleButtonState(inputList, buttonElement) {
-  if (hasInvalidInput(inputList)) {
-    // Botón DESHABILITADO
-    buttonElement.classList.add("popup__submit_disabled");
-    buttonElement.disabled = true;
-  } else {
-    // Botón HABILITADO
-    buttonElement.classList.remove("popup__submit_disabled");
-    buttonElement.disabled = false;
-  }
-}
+// //Deshabilitar el Botón
+// function toggleButtonState(inputList, buttonElement) {
+//   if (hasInvalidInput(inputList)) {
+//     // Botón DESHABILITADO
+//     buttonElement.classList.add("popup__submit_disabled");
+//     buttonElement.disabled = true;
+//   } else {
+//     // Botón HABILITADO
+//     buttonElement.classList.remove("popup__submit_disabled");
+//     buttonElement.disabled = false;
+//   }
+// }
 
-//Verificar la condición para cada input
-function hasInvalidInput(inputList) {
-  return inputList.some(function (inputElement) {
-    return !inputElement.validity.valid;
-  });
-}
+// //Verificar la condición para cada input
+// function hasInvalidInput(inputList) {
+//   return inputList.some(function (inputElement) {
+//     return !inputElement.validity.valid;
+//   });
+// }
+
+// //limpia mensaje de error
+// function clearValidation() {
+//   const formList = Array.from(document.querySelectorAll(".popup__form"));
+
+//   formList.forEach((formElement) => {
+//     const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
+//     const buttonElement = formElement.querySelector(".popup__button");
+
+//     inputList.forEach((inputElement) => {
+//       hideInputError(formElement, inputElement);
+//     });
+
+//     toggleButtonState(inputList, buttonElement);
+//   });
+// }
 
 //Cerrar ventana en superposición
 const popups = document.querySelectorAll(".popup");
@@ -262,23 +278,7 @@ function handleEscClose(evt) {
   }
 }
 
-//limpia mensaje de error
-function clearValidation() {
-  const formList = Array.from(document.querySelectorAll(".popup__form"));
-
-  formList.forEach((formElement) => {
-    const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-    const buttonElement = formElement.querySelector(".popup__button");
-
-    inputList.forEach((inputElement) => {
-      hideInputError(formElement, inputElement);
-    });
-
-    toggleButtonState(inputList, buttonElement);
-  });
-}
-
-//Crea una instancia
+//Crea una instancia de Card
 initialCards.forEach((item) => {
   const card = new Card(item, "#cards-template");
   const cardElement = card.generateCard();
@@ -291,6 +291,9 @@ const config = {
   inputErrorClass: "popup__input_error",
 };
 
-const formElement = document.querySelector(".popup__form");
-const formValidator = new FormValidator(config, formElement);
-formValidator.setEventListeners();
+const formList = Array.from(document.querySelectorAll(".popup__form"));
+
+formList.forEach((formElement) => {
+  const formValidator = new FormValidator(config, formElement);
+  formValidator.setEventListeners();
+});
