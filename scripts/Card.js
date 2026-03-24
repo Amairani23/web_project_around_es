@@ -18,8 +18,8 @@ export class Card {
     this._element = this._getTemplate();
     this._setEventListeners();
 
-    this._element.querySelector(".card__image").src = this._link;
     this._element.querySelector(".card__title").textContent = this._name;
+    this._element.querySelector(".card__image").src = this._link;
 
     return this._element;
   }

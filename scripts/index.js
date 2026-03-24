@@ -88,7 +88,6 @@ const cardContainer = document.querySelector(".cards");
 const cardsTemplate = document.querySelector("#cards-template");
 const cardPopup = document.querySelector("#new-card-popup");
 const openCardBtn = document.querySelector(".profile__add-button");
-//const closeCardBtn = cardPopup.querySelector(".popup__close");
 const containerList = document.querySelector(".cards__list");
 const formNewCard = document.querySelector("#new-card-form");
 const nameInputForm = formNewCard.querySelector(".popup__input_type_card-name");
@@ -96,7 +95,6 @@ const imageInputForm = formNewCard.querySelector(".popup__input_type_url");
 const imagenPopup = document.querySelector("#image-popup");
 const imagenPopupElement = imagenPopup.querySelector(".popup__image");
 const captionPopupImage = imagenPopup.querySelector(".popup__caption");
-//const imagenPopupClose = imagenPopup.querySelector(".popup__close");
 
 function getCardElement(name, link) {
   const cardElement = cardsTemplate.content
@@ -129,10 +127,6 @@ function getCardElement(name, link) {
     openModal(imagenPopup);
   });
 
-  // imagenPopupClose.addEventListener("click", function () {
-  //   closeModal(imagenPopup);
-  // });
-
   return cardElement;
 }
 
@@ -141,17 +135,13 @@ function renderCard(name, link, containerList) {
   containerList.prepend(cardElements);
 }
 
-initialCards.forEach((item) => {
-  renderCard(item.name, item.link, containerList);
-});
+// initialCards.forEach((item) => {
+//   renderCard(item.name, item.link, containerList);
+// });
 
 openCardBtn.addEventListener("click", function () {
   openModal(cardPopup);
 });
-
-// closeCardBtn.addEventListener("click", function () {
-//   closeModal(cardPopup);
-// });
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
