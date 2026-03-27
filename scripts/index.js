@@ -92,50 +92,11 @@ const imagenPopup = document.querySelector("#image-popup");
 const imagenPopupElement = imagenPopup.querySelector(".popup__image");
 const captionPopupImage = imagenPopup.querySelector(".popup__caption");
 
-// function getCardElement(name, link) {
-//   const cardElement = cardsTemplate.content
-//     .querySelector(".card")
-//     .cloneNode(true);
-//   const cardImage = cardElement.querySelector(".card__image");
-//   const cardTitle = cardElement.querySelector(".card__title");
-
-//   const finalName = name.trim() === "" ? "Sin título" : name;
-//   const finalLink = link.trim() === "" ? "./images/placeholder.jpg" : link;
-
-//   cardImage.src = finalLink;
-//   cardImage.alt = finalName;
-//   cardTitle.textContent = finalName;
-
-//   const likeBtn = cardElement.querySelector(".card__like-button");
-//   likeBtn.addEventListener("click", function () {
-//     likeBtn.classList.toggle("card__like-button_is-active");
-//   });
-
-//   const deleteBtn = cardElement.querySelector(".card__delete-button");
-//   deleteBtn.addEventListener("click", function () {
-//     cardElement.remove();
-//   });
-
-//   cardImage.addEventListener("click", function () {
-//     imagenPopupElement.src = finalLink;
-//     imagenPopupElement.alt = finalName;
-//     captionPopupImage.textContent = finalName;
-//     openModal(imagenPopup);
-//   });
-
-//   return cardElement;
-// }
-
 function renderCard(data) {
   const card = new Card(data, "#cards-template");
   const cardElement = card.generateCard();
-  //const cardElements = getCardElement(name, link);
   containerList.prepend(cardElement);
 }
-
-// initialCards.forEach((item) => {
-//   renderCard(item.name, item.link, containerList);
-// });
 
 openCardBtn.addEventListener("click", function () {
   openModal(cardPopup);
@@ -144,8 +105,6 @@ openCardBtn.addEventListener("click", function () {
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
 
-  // const name = nameInputForm.value.trim();
-  // const link = imageInputForm.value.trim();
   const data = {
     name: nameInputForm.value,
     link: imageInputForm.value,
@@ -158,89 +117,7 @@ function handleCardFormSubmit(evt) {
 
 formNewCard.addEventListener("submit", handleCardFormSubmit);
 
-//validación del formulario
-// const formList = Array.from(document.querySelectorAll(".popup__form"));
-
-// formList.forEach((formElement) => {
-//   const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-//   const buttonElement = formElement.querySelector(".popup__button");
-
-//   inputList.forEach((inputElement) => {
-//     inputElement.addEventListener("input", function () {
-//       if (!inputElement.validity.valid) {
-//         showInputError(
-//           formElement,
-//           inputElement,
-//           inputElement.validationMessage,
-//         );
-//       } else {
-//         hideInputError(formElement, inputElement);
-//       }
-
-//       toggleButtonState(inputList, buttonElement);
-//     });
-//   });
-// });
-
-// //Mostrar mensaje de error
-// function showInputError(formElement, inputElement, errorMessage) {
-//   const errorElement = formElement.querySelector(
-//     `.${inputElement.id}-input-error`,
-//   );
-//   inputElement.classList.add("popup__input_type_error");
-//   errorElement.textContent = errorMessage;
-//   errorElement.classList.add("popup__input-error_active");
-// }
-
-// //Ocultar mensaje de error
-// function hideInputError(formElement, inputElement) {
-//   const errorElement = formElement.querySelector(
-//     `.${inputElement.id}-input-error`,
-//   );
-
-//   inputElement.classList.remove("popup__input_type_error");
-//   errorElement.textContent = "";
-//   errorElement.classList.remove("popup__input-error_active");
-// }
-
-// //Deshabilitar el Botón
-// function toggleButtonState(inputList, buttonElement) {
-//   if (hasInvalidInput(inputList)) {
-//     // Botón DESHABILITADO
-//     buttonElement.classList.add("popup__submit_disabled");
-//     buttonElement.disabled = true;
-//   } else {
-//     // Botón HABILITADO
-//     buttonElement.classList.remove("popup__submit_disabled");
-//     buttonElement.disabled = false;
-//   }
-// }
-
-// //Verificar la condición para cada input
-// function hasInvalidInput(inputList) {
-//   return inputList.some(function (inputElement) {
-//     return !inputElement.validity.valid;
-//   });
-// }
-
-// //limpia mensaje de error
-// function clearValidation() {
-//   const formList = Array.from(document.querySelectorAll(".popup__form"));
-
-//   formList.forEach((formElement) => {
-//     const inputList = Array.from(formElement.querySelectorAll(".popup__input"));
-//     const buttonElement = formElement.querySelector(".popup__button");
-
-//     inputList.forEach((inputElement) => {
-//       hideInputError(formElement, inputElement);
-//     });
-
-//     toggleButtonState(inputList, buttonElement);
-//   });
-// }
-
 //Cerrar ventana en superposición
-
 const popups = document.querySelectorAll(".popup");
 popups.forEach((popup) => {
   setupPopupEventListeners(popup);
