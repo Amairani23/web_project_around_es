@@ -1,3 +1,5 @@
+import { Popup } from "./Popup";
+
 export class Card {
   constructor(data, cardSelector) {
     this._name = data.name;
