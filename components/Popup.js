@@ -1,6 +1,6 @@
 import { Card } from "./Popup";
 
-export class Popup {
+export default class Popup {
   constructor(popupSelector) {
     this._container = document.querySelector(popupSelector);
   }
