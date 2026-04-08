@@ -1,5 +1,6 @@
 import { Card } from "./Card.js";
 import { FormValidator } from "./FormValidator.js";
+import { Popup } from "./Popup.js";
 
 let initialCards = [
   {
@@ -117,35 +118,39 @@ function handleCardFormSubmit(evt) {
 
 formNewCard.addEventListener("submit", handleCardFormSubmit);
 
-//Cerrar ventana en superposición
 const popups = document.querySelectorAll(".popup");
-popups.forEach((popup) => {
-  setupPopupEventListeners(popup);
-});
+const popup = new Popup(popups);
+popup.setEventListeners();
 
-function setupPopupEventListeners(popup) {
-  //botones ".popup__close"
-  const closeButton = popup.querySelector(".popup__close");
-  closeButton.addEventListener("click", () => {
-    closeModal(popup);
-  });
-  //caja ".popup"
-  popup.addEventListener("click", (evt) => {
-    if (evt.target.classList.contains("popup")) {
-      closeModal(evt.target);
-    }
-  });
-}
+//Cerrar ventana en superposición
+// const popups = document.querySelectorAll(".popup");
+// popups.forEach((popup) => {
+//   setupPopupEventListeners(popup);
+// });
+
+// function setupPopupEventListeners(popup) {
+//   //botones ".popup__close"
+//   const closeButton = popup.querySelector(".popup__close");
+//   closeButton.addEventListener("click", () => {
+//     closeModal(popup);
+//   });
+//   //caja ".popup"
+//   popup.addEventListener("click", (evt) => {
+//     if (evt.target.classList.contains("popup")) {
+//       closeModal(evt.target);
+//     }
+//   });
+// }
 
 //Tecla: Escape
-function handleEscClose(evt) {
-  if (evt.key === "Escape") {
-    const openedPopup = document.querySelector(".popup_is-opened");
-    if (openedPopup) {
-      closeModal(openedPopup);
-    }
-  }
-}
+// function handleEscClose(evt) {
+//   if (evt.key === "Escape") {
+//     const openedPopup = document.querySelector(".popup_is-opened");
+//     if (openedPopup) {
+//       closeModal(openedPopup);
+//     }
+//   }
+// }
 
 //Crea las Cards de la lista
 initialCards.forEach((item) => {

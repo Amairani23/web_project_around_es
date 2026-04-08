@@ -1,5 +1,3 @@
-import { Popup } from "./Popup";
-
 export default class Card {
   constructor(data, cardSelector) {
     this._name = data.name;
