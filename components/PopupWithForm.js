@@ -1,21 +1,23 @@
-import Popup from "./Popup";
+import Popup from "./Popup.js";
 
 class PopupWithForm extends Popup {
-  constructor() {}
+  constructor(selector, callback) {
+    super(selector);
+    this.callback = callback;
+    this.formElement = this._container.querySelector("form");
+  }
 
   _getInputValues() {
-    const formList = Array.from(document.querySelectorAll(".popup__form"));
+    this._inputList = Array.from(this._formElement.querySelectorAll("input"));
   }
 
-  setEventListeners(btnElement) {
+  setEventListeners() {
     super.setEventListeners();
-    btnElement.addEventListener("submit", (evt) => {
+
+    this.formElement.addEventListener("submit", (evt) => {
       evt.preventDefault();
       this.close();
+      this.formElement.reset();
     });
-  }
-
-  close(modalElement) {
-    modalElement.reset();
   }
 }

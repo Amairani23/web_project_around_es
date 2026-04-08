@@ -1,8 +1,12 @@
-import Popup from "./Popup";
+import Popup from "./Popup.js";
 
-class PopupWithImage extends Popup {
-  open(modalElement) {
-    modalElement.src = this._link;
-    modalElement.alt = this._name;
+export default class PopupWithImage extends Popup {
+  constructor(selector) {
+    super(selector);
+    this.imageElement = this._container.querySelector(".popup__image");
+  }
+  open(url) {
+    super.open();
+    this.imageElement.src = url;
   }
 }
