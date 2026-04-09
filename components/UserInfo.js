@@ -1,19 +1,20 @@
-class UserInfo {
-  constructor({ nameInput, descriptionInput }) {
-    this._nameInput = nameInput;
-    this._descriptionInput = descriptionInput;
+export default class UserInfo {
+  constructor({ nameSelector, aboutSelector }) {
+    this._nameElement = document.querySelector(nameSelector);
+    this._aboutElement = document.querySelector(aboutSelector);
   }
 
   getUserInfo() {
-    profileTitle.textContent = this._nameInput.value;
-    profileDescription.textContent = this._descriptionInput.value;
+    const userInfo = {
+      name: this._nameElement.textContent,
+      about: this._aboutElement.textContent,
+    };
+
+    return userInfo;
   }
 
-  setUserInfo() {
-    let profileTitle = document.querySelector(".profile__title");
-    let profileDescription = document.querySelector(".profile__description");
-
-    this._nameInput.value = profileTitle.textContent;
-    this._descriptionInput.value = profileDescription.textContent;
+  setUserInfo({ name, about }) {
+    this._nameElement.textContent = name;
+    this._aboutElement.textContent = about;
   }
 }

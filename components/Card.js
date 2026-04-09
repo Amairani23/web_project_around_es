@@ -1,8 +1,9 @@
 export default class Card {
-  constructor(data, cardSelector) {
+  constructor(data, cardSelector, handleCardClick) {
     this._name = data.name;
     this._link = data.link;
     this._cardSelector = cardSelector;
+    this._handleCardClick = handleCardClick;
   }
 
   //Clona el template
@@ -49,6 +50,12 @@ export default class Card {
       .querySelector(".card__delete-button")
       .addEventListener("click", () => {
         this._handleDeleteClick();
+      });
+
+    this._element
+      .querySelector(".card__image")
+      .addEventListener("click", () => {
+        this._handleCardClick(this._link);
       });
   }
 }
