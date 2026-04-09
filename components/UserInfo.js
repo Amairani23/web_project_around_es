@@ -5,9 +5,6 @@ class UserInfo {
   }
 
   getUserInfo() {
-    let profileTitle = document.querySelector(".profile__title");
-    let profileDescription = document.querySelector(".profile__description");
-
     profileTitle.textContent = this._nameInput.value;
     profileDescription.textContent = this._descriptionInput.value;
   }

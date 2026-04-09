@@ -2,8 +2,9 @@ import Card from "../components/Card.js";
 import FormValidator from "../components/FormValidator.js";
 import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
+import Section from "../components/Section.js";
 
-let initialCards = [
+const initialCards = [
   {
     name: "Valle de Yosemite",
     link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
@@ -58,12 +59,27 @@ btnCreateCard.addEventListener("click", () => {
   popupCreateCard.open();
 });
 
-//Crear Cards
+//Crear tarjeta
 function renderCard(data) {
-  const card = new Card(data, "#cards-template");
-  const cardElement = card.generateCard();
-  containerList.prepend(cardElement);
+  const card = new Card(data.name, data.link, "#cards-template");
+  const cardElements = card.generateCard();
+
+  containerList.prepend(cardElements);
 }
+
+//Administra las listas en el DOM
+const cardList = new Section(
+  {
+    items: initialCards,
+    renderer: (item) => {
+      const card = new Card(item, "#cards-template");
+      return card.generateCard();
+    },
+  },
+  ".cards__list",
+);
+
+cardList.renderItems();
 
 //Tecla: Escape;
 function handleEscClose(evt) {
@@ -74,11 +90,6 @@ function handleEscClose(evt) {
     }
   }
 }
-
-//Muestra las tarjetas
-initialCards.forEach((item) => {
-  renderCard(item);
-});
 
 //Validación de formulario
 const config = {
