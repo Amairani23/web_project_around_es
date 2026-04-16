@@ -12,6 +12,8 @@ import {
   nameInput,
   aboutInput,
 } from "../utils/constants.js";
+import Api from "../components/Api.js";
+//import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
@@ -39,6 +41,9 @@ btnEditProfile.addEventListener("click", () => {
   aboutInput.value = info.about;
 });
 
+// const popupWithConfirmation = new PopupWithConfirmation(".popup_type_delete");
+// popupWithConfirmation.setEventListeners();
+
 btnCreateCard.addEventListener("click", () => {
   popupCreateCard.open();
   validationInputs();
@@ -46,9 +51,24 @@ btnCreateCard.addEventListener("click", () => {
 
 //Crear Cards
 function renderCard(data) {
-  const card = new Card(data, "#cards-template", (src) => {
-    imagePopup.open(src);
-  });
+  const card = new Card(
+    data,
+    "#cards-template",
+    (src) => {
+      imagePopup.open(src);
+    },
+    // (cardInstance) => {
+    //   popupWithConfirmation.open(() => {
+    //     api
+    //       .deleteCard(cardInstance.getId())
+    //       .then(() => {
+    //         cardInstance.removeCard();
+    //         popupWithConfirmation.close();
+    //       })
+    //       .catch((err) => console.log(err));
+    //   });
+    // },
+  );
   const cardElement = card.generateCard();
   containerList.prepend(cardElement);
 }
@@ -58,9 +78,24 @@ const cardList = new Section(
   {
     items: initialCards,
     renderer: (item) => {
-      const card = new Card(item, "#cards-template", (src) => {
-        imagePopup.open(src);
-      });
+      const card = new Card(
+        item,
+        "#cards-template",
+        (src) => {
+          imagePopup.open(src);
+        },
+        // (cardInstance) => {
+        //   popupWithConfirmation.open(() => {
+        //     api
+        //       .deleteCard(cardInstance.getId())
+        //       .then(() => {
+        //         cardInstance.removeCard();
+        //         popupWithConfirmation.close();
+        //       })
+        //       .catch((err) => console.log(err));
+        //   });
+        // },
+      );
       return card.generateCard();
     },
   },
@@ -85,3 +120,61 @@ function validationInputs() {
 }
 
 validationInputs();
+
+// Crear instancia de Api
+const api = new Api({
+  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  headers: {
+    authorization: "5ee9c752-6cba-4218-ab59-fe5a887f2b10",
+    "Content-Type": "application/json",
+  },
+});
+
+// Cargar información del usuario
+api
+  .getUserInfo()
+  .then((usersData) => {
+    console.log(usersData);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+// Cargar tarjetas desde el servidor
+api
+  .getInitialCards()
+  .then((cardsData) => {
+    console.log(cardsData);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+// Editar el perfil
+api
+  .updateUserInfo()
+  .then((userData) => {
+    console.log(userData);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+// Agregar una nueva tarjeta
+api
+  .addCard()
+  .then((addCard) => {
+    console.log(addCard);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+// Eliminar una tarjeta
+api
+  .deleteCard(cardId)
+  .then(() => {
+    card.removeCard();
+    deletePopup.close();
+  })
+  .catch((err) => console.log(err));

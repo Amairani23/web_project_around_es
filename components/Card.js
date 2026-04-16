@@ -1,9 +1,10 @@
 export default class Card {
-  constructor(data, cardSelector, handleCardClick) {
+  constructor(data, cardSelector, handleCardClick, handleDeleteClick) {
     this._name = data.name;
     this._link = data.link;
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
+    this._handleDeleteClick = handleDeleteClick;
   }
 
   //Clona el template
@@ -35,7 +36,16 @@ export default class Card {
 
   //Elimina la tarjeta
   _handleDeleteClick() {
+    this._handleDeleteClick(this);
+  }
+
+  removeCard() {
     this._element.remove();
+    this._element = null;
+  }
+
+  getId() {
+    return this._data._id;
   }
 
   //configura listeners
