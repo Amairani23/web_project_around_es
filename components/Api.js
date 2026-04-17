@@ -26,13 +26,13 @@ export default class Api {
     });
   }
 
-  updateUserInfo() {
+  updateUserInfo(userData) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
       headers: this.headers,
       body: JSON.stringify({
-        name: "Marie Skłodowska Curie",
-        about: "Física y Química",
+        name: userData.name,
+        about: userData.about,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -42,13 +42,13 @@ export default class Api {
     });
   }
 
-  addCard() {
+  addCard(cardData) {
     return fetch(`${this.baseUrl}/cards`, {
       method: "POST",
       headers: this.headers,
       body: JSON.stringify({
-        name: "Parque Nacional de la Vanoise",
-        link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_vanoise.jpg",
+        name: cardData.name,
+        link: cardData.link,
       }),
     }).then((res) => {
       if (res.ok) {
@@ -65,17 +65,17 @@ export default class Api {
     });
   }
 
-  addLike(cardId) {
-    return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: "PUT",
-      headers: this._headers,
-    });
-  }
+  // addLike(cardId) {
+  //   return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
+  //     method: "PUT",
+  //     headers: this._headers,
+  //   });
+  // }
 
-  removeLike(cardId) {
-    return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-      method: "DELETE",
-      headers: this._headers,
-    });
-  }
+  // removeLike(cardId) {
+  //   return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
+  //     method: "DELETE",
+  //     headers: this._headers,
+  //   });
+  // }
 }

@@ -13,7 +13,7 @@ import {
   aboutInput,
 } from "../utils/constants.js";
 import Api from "../components/Api.js";
-//import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
+import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
@@ -41,8 +41,8 @@ btnEditProfile.addEventListener("click", () => {
   aboutInput.value = info.about;
 });
 
-// const popupWithConfirmation = new PopupWithConfirmation(".popup_type_delete");
-// popupWithConfirmation.setEventListeners();
+const popupWithConfirmation = new PopupWithConfirmation("#delete-popup");
+popupWithConfirmation.setEventListeners();
 
 btnCreateCard.addEventListener("click", () => {
   popupCreateCard.open();
@@ -89,7 +89,8 @@ const cardList = new Section(
         //     api
         //       .deleteCard(cardInstance.getId())
         //       .then(() => {
-        //         cardInstance.removeCard();
+        //         console.log(cardInstance.getId());
+        //         //cardInstance.removeCard();
         //         popupWithConfirmation.close();
         //       })
         //       .catch((err) => console.log(err));
@@ -102,7 +103,7 @@ const cardList = new Section(
   ".cards__list",
 );
 
-cardList.renderItems();
+//cardList.renderItems();
 
 //Validación de formulario
 const config = {
@@ -134,47 +135,83 @@ const api = new Api({
 api
   .getUserInfo()
   .then((usersData) => {
-    console.log(usersData);
+    // Actualizar la interfaz con los datos
+    document.querySelector(".profile__title").textContent = usersData.name;
+    document.querySelector(".profile__description").textContent =
+      usersData.about;
+    //document.querySelector(".profile__avatar").src = usersData.avatar;
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err + " al cargar información");
   });
 
 // Cargar tarjetas desde el servidor
 api
   .getInitialCards()
   .then((cardsData) => {
-    console.log(cardsData);
+    //Renderizar las tarjetas en la página
+    cardsData.forEach((cardData) => {
+      const card = new Card(
+        cardData,
+        "#cards-template",
+        (src) => {
+          imagePopup.open(src);
+        },
+        () => {
+          popupWithConfirmation.open();
+        },
+      );
+      const cardElement = card.generateCard();
+      containerList.append(cardElement);
+    });
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err + " al crear tarjetas");
   });
 
 // Editar el perfil
 api
-  .updateUserInfo()
-  .then((userData) => {
-    console.log(userData);
+  .updateUserInfo({
+    name: nameInput.value,
+    about: aboutInput.value,
+  })
+  .then((updatedUserData) => {
+    // Actualizar la interfaz con los datos del servidor
+    document.querySelector(".profile__title").textContent =
+      updatedUserData.name;
+    document.querySelector(".profile__description").textContent =
+      updatedUserData.about;
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err + " al editar perfil");
   });
 
-// Agregar una nueva tarjeta
+// // Agregar una nueva tarjeta
+const form = document.querySelector("#new-card-form");
+const nameInputCard = form.querySelector(".popup__input_type_card-name");
+const linkInputCard = form.querySelector(".popup__input_type_card-name");
 api
-  .addCard()
-  .then((addCard) => {
-    console.log(addCard);
+  // .addCard({
+  //   name: "Amairani",
+  //   link: "https://i.blogs.es/8256d5/gpu-openai-chatgpt/500_333.jpeg",
+  // })
+  .addCard({
+    name: nameInputCard.value,
+    link: linkInputCard.value,
+  })
+  .then((card) => {
+    console.log(card);
+    renderCard(card);
   })
   .catch((err) => {
-    console.log(err);
+    console.log(err + " al agregar tarjeta");
   });
 
 // Eliminar una tarjeta
-api
-  .deleteCard(cardId)
-  .then(() => {
-    card.removeCard();
-    deletePopup.close();
-  })
-  .catch((err) => console.log(err));
+// api
+//   .deleteCard()
+//   .then(() => {
+//     card.removeCard();
+//     deletePopup.close();
+//   })
+//   .catch((err) => console.log(err));
