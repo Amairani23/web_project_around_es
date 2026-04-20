@@ -15,39 +15,22 @@ import {
 import Api from "../components/Api.js";
 import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 
+// Crear instancia de Api
+const api = new Api({
+  baseUrl: "https://around-api.es.tripleten-services.com/v1",
+  headers: {
+    authorization: "41863ac7-76e4-4b02-83ad-41a05f0c7f79",
+    "Content-Type": "application/json",
+  },
+});
+
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   aboutSelector: ".profile__description",
 });
 
-const popupEditProfile = new PopupWithForm("#edit-popup", (data) => {
-  userInfo.setUserInfo(data);
-});
-popupEditProfile.setEventListeners();
-
-const popupCreateCard = new PopupWithForm("#new-card-popup", (data) => {
-  renderCard(data);
-});
-popupCreateCard.setEventListeners();
-
 const imagePopup = new PopupWithImage("#image-popup");
 imagePopup.setEventListeners();
-
-btnEditProfile.addEventListener("click", () => {
-  popupEditProfile.open();
-
-  const info = userInfo.getUserInfo();
-  nameInput.value = info.name;
-  aboutInput.value = info.about;
-});
-
-const popupWithConfirmation = new PopupWithConfirmation("#delete-popup");
-popupWithConfirmation.setEventListeners();
-
-btnCreateCard.addEventListener("click", () => {
-  popupCreateCard.open();
-  validationInputs();
-});
 
 //Crear Cards
 function renderCard(data) {
@@ -57,53 +40,24 @@ function renderCard(data) {
     (src) => {
       imagePopup.open(src);
     },
-    // (cardInstance) => {
-    //   popupWithConfirmation.open(() => {
-    //     api
-    //       .deleteCard(cardInstance.getId())
-    //       .then(() => {
-    //         cardInstance.removeCard();
-    //         popupWithConfirmation.close();
-    //       })
-    //       .catch((err) => console.log(err));
-    //   });
-    // },
+    () => {
+      popupWithConfirmation.setCard(card);
+      popupWithConfirmation.open();
+
+      popupWithConfirmation.setHandleSubmit((card) => {
+        api
+          .deleteCard(card._id)
+          .then(() => {
+            card.removeCard();
+            popupWithConfirmation.close();
+          })
+          .catch(console.log);
+      });
+    },
   );
   const cardElement = card.generateCard();
   containerList.prepend(cardElement);
 }
-
-//Administra las listas en el DOM
-const cardList = new Section(
-  {
-    items: initialCards,
-    renderer: (item) => {
-      const card = new Card(
-        item,
-        "#cards-template",
-        (src) => {
-          imagePopup.open(src);
-        },
-        // (cardInstance) => {
-        //   popupWithConfirmation.open(() => {
-        //     api
-        //       .deleteCard(cardInstance.getId())
-        //       .then(() => {
-        //         console.log(cardInstance.getId());
-        //         //cardInstance.removeCard();
-        //         popupWithConfirmation.close();
-        //       })
-        //       .catch((err) => console.log(err));
-        //   });
-        // },
-      );
-      return card.generateCard();
-    },
-  },
-  ".cards__list",
-);
-
-//cardList.renderItems();
 
 //Validación de formulario
 const config = {
@@ -122,28 +76,8 @@ function validationInputs() {
 
 validationInputs();
 
-// Crear instancia de Api
-const api = new Api({
-  baseUrl: "https://around-api.es.tripleten-services.com/v1",
-  headers: {
-    authorization: "5ee9c752-6cba-4218-ab59-fe5a887f2b10",
-    "Content-Type": "application/json",
-  },
-});
-
-// Cargar información del usuario
-api
-  .getUserInfo()
-  .then((usersData) => {
-    // Actualizar la interfaz con los datos
-    document.querySelector(".profile__title").textContent = usersData.name;
-    document.querySelector(".profile__description").textContent =
-      usersData.about;
-    //document.querySelector(".profile__avatar").src = usersData.avatar;
-  })
-  .catch((err) => {
-    console.log(err + " al cargar información");
-  });
+const popupWithConfirmation = new PopupWithConfirmation("#delete-popup");
+popupWithConfirmation.setEventListeners();
 
 // Cargar tarjetas desde el servidor
 api
@@ -158,7 +92,18 @@ api
           imagePopup.open(src);
         },
         () => {
+          popupWithConfirmation.setCard(card);
           popupWithConfirmation.open();
+
+          popupWithConfirmation.setHandleSubmit((card) => {
+            api
+              .deleteCard(card._id)
+              .then(() => {
+                card.removeCard();
+                popupWithConfirmation.close();
+              })
+              .catch(console.log);
+          });
         },
       );
       const cardElement = card.generateCard();
@@ -170,48 +115,59 @@ api
   });
 
 // Editar el perfil
+const popupEditProfile = new PopupWithForm("#edit-popup", (data) => {
+  api
+    .updateUserInfo(data)
+    .then((updatedUserData) => {
+      userInfo.setUserInfo(updatedUserData);
+      popupEditProfile.close();
+      popupEditProfile.formElement.reset();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+popupEditProfile.setEventListeners();
+
+btnEditProfile.addEventListener("click", () => {
+  //obtiene los datos guardados en tu clase UserInfo
+  const info = userInfo.getUserInfo();
+  //rellena el input de nombre
+  nameInput.value = info.name;
+  //rellena el input de descripción
+  aboutInput.value = info.about;
+
+  popupEditProfile.open();
+  validationInputs();
+});
+
+// Cargar información del usuario
 api
-  .updateUserInfo({
-    name: nameInput.value,
-    about: aboutInput.value,
-  })
-  .then((updatedUserData) => {
-    // Actualizar la interfaz con los datos del servidor
-    document.querySelector(".profile__title").textContent =
-      updatedUserData.name;
-    document.querySelector(".profile__description").textContent =
-      updatedUserData.about;
+  .getUserInfo()
+  .then((usersData) => {
+    // actualizar la interfaz con los datos
+    userInfo.setUserInfo(usersData);
   })
   .catch((err) => {
-    console.log(err + " al editar perfil");
+    console.log(err + " al cargar información");
   });
 
-// // Agregar una nueva tarjeta
-const form = document.querySelector("#new-card-form");
-const nameInputCard = form.querySelector(".popup__input_type_card-name");
-const linkInputCard = form.querySelector(".popup__input_type_card-name");
-api
-  // .addCard({
-  //   name: "Amairani",
-  //   link: "https://i.blogs.es/8256d5/gpu-openai-chatgpt/500_333.jpeg",
-  // })
-  .addCard({
-    name: nameInputCard.value,
-    link: linkInputCard.value,
-  })
-  .then((card) => {
-    console.log(card);
-    renderCard(card);
-  })
-  .catch((err) => {
-    console.log(err + " al agregar tarjeta");
-  });
+// Agregar una nueva tarjeta
+const popupCreateCard = new PopupWithForm("#new-card-popup", (data) => {
+  api
+    .addCard(data)
+    .then((card) => {
+      renderCard(card);
+      popupCreateCard.close();
+      popupCreateCard.formElement.reset();
+    })
+    .catch((err) => {
+      console.log(err + " al agregar tarjeta");
+    });
+});
+popupCreateCard.setEventListeners();
 
-// Eliminar una tarjeta
-// api
-//   .deleteCard()
-//   .then(() => {
-//     card.removeCard();
-//     deletePopup.close();
-//   })
-//   .catch((err) => console.log(err));
+btnCreateCard.addEventListener("click", () => {
+  popupCreateCard.open();
+  validationInputs();
+});

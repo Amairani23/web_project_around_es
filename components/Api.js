@@ -59,9 +59,12 @@ export default class Api {
   }
 
   deleteCard(cardId) {
-    return this._request(`${this._baseUrl}/cards/${cardId}`, {
+    return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
+      headers: this.headers,
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return Promise.reject(`Error: ${res.status}`);
     });
   }
 

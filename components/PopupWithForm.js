@@ -13,7 +13,12 @@ export default class PopupWithForm extends Popup {
     const formValues = {};
 
     this._inputList.forEach((input) => {
+      //se usa el atributo HTML "name" como clave dinámica
       formValues[input.name] = input.value;
+      //valores como los agrega:
+      //formValues["name"] = "Juan"
+      //formValues["about"] = "Developer"
+      //Resultado: { name: "Juan", about: "Developer"}
     });
 
     return formValues;
@@ -25,8 +30,6 @@ export default class PopupWithForm extends Popup {
     this.formElement.addEventListener("submit", (evt) => {
       evt.preventDefault();
       this.handleFormSubmit(this._getInputValues());
-      this.close();
-      this.formElement.reset();
     });
   }
 }
