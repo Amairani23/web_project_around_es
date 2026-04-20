@@ -1,11 +1,18 @@
 export default class Card {
-  constructor(data, cardSelector, handleCardClick, handleDeleteClick) {
+  constructor(
+    data,
+    cardSelector,
+    handleCardClick,
+    handleDeleteClick,
+    handleLikeClick,
+  ) {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
     this._handleDeleteClick = handleDeleteClick;
+    this._handleLikeClick = handleLikeClick;
   }
 
   //Clona el template
@@ -29,12 +36,16 @@ export default class Card {
   }
 
   //Activa o Desactiva el botón
-  _handleLikeClick() {
-    this._element
-      .querySelector(".card__like-button")
-      .classList.toggle("card__like-button_is-active");
+  updateLikes(isLiked) {
+    const likeButton = this._element.querySelector(".card__like-button");
+    if (isLiked) {
+      likeButton.classList.add("card__like-button_is-active");
+    } else {
+      likeButton.classList.remove("card__like-button_is-active");
+    }
   }
 
+  //Elimina tarjeta del DOM
   removeCard() {
     this._element.remove();
     this._element = null;
@@ -45,7 +56,7 @@ export default class Card {
     this._element
       .querySelector(".card__like-button")
       .addEventListener("click", () => {
-        this._handleLikeClick();
+        this._handleLikeClick(this._id, this.isLiked);
       });
 
     this._element

@@ -105,13 +105,28 @@ api
               .catch(console.log);
           });
         },
+        (cardId, isLiked) => {
+          // Decidir qué método usar según el estado actual
+          const likeMethod = isLiked
+            ? api.removeLike(cardId)
+            : api.addLike(cardId);
+
+          likeMethod
+            .then((updatedCard) => {
+              // El servidor devuelve la tarjeta actualizada
+              card.updateLikes(updatedCard.isLiked);
+            })
+            .catch((error) => {
+              console.log(error + " al actualizar like");
+            });
+        },
       );
       const cardElement = card.generateCard();
       containerList.append(cardElement);
     });
   })
-  .catch((err) => {
-    console.log(err + " al crear tarjetas");
+  .catch((error) => {
+    console.log(error + " al crear tarjetas");
   });
 
 // Editar el perfil
@@ -123,8 +138,8 @@ const popupEditProfile = new PopupWithForm("#edit-popup", (data) => {
       popupEditProfile.close();
       popupEditProfile.formElement.reset();
     })
-    .catch((err) => {
-      console.log(err);
+    .catch((error) => {
+      console.log(error);
     });
 });
 popupEditProfile.setEventListeners();
@@ -148,8 +163,8 @@ api
     // actualizar la interfaz con los datos
     userInfo.setUserInfo(usersData);
   })
-  .catch((err) => {
-    console.log(err + " al cargar información");
+  .catch((error) => {
+    console.log(error + " al cargar información");
   });
 
 // Agregar una nueva tarjeta
@@ -161,8 +176,8 @@ const popupCreateCard = new PopupWithForm("#new-card-popup", (data) => {
       popupCreateCard.close();
       popupCreateCard.formElement.reset();
     })
-    .catch((err) => {
-      console.log(err + " al agregar tarjeta");
+    .catch((error) => {
+      console.log(error + " al agregar tarjeta");
     });
 });
 popupCreateCard.setEventListeners();

@@ -4,6 +4,7 @@ export default class Api {
     this.headers = options.headers;
   }
 
+  //Muestra información del usuario
   getUserInfo() {
     return fetch(`${this.baseUrl}/users/me`, {
       headers: this.headers,
@@ -15,6 +16,7 @@ export default class Api {
     });
   }
 
+  //Muestra las tarjetas
   getInitialCards() {
     return fetch(`${this.baseUrl}/cards`, {
       headers: this.headers,
@@ -26,6 +28,7 @@ export default class Api {
     });
   }
 
+  //Edita información del usuario
   updateUserInfo(userData) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
@@ -42,6 +45,7 @@ export default class Api {
     });
   }
 
+  //Agrega tarjeta
   addCard(cardData) {
     return fetch(`${this.baseUrl}/cards`, {
       method: "POST",
@@ -58,6 +62,7 @@ export default class Api {
     });
   }
 
+  // Eliminar tarjeta
   deleteCard(cardId) {
     return fetch(`${this.baseUrl}/cards/${cardId}`, {
       method: "DELETE",
@@ -68,17 +73,25 @@ export default class Api {
     });
   }
 
-  // addLike(cardId) {
-  //   return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-  //     method: "PUT",
-  //     headers: this._headers,
-  //   });
-  // }
+  // Agregar "me gusta"
+  addLike(cardId) {
+    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+      method: "PUT",
+      headers: this.headers,
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return Promise.reject(`Error: ${res.status}`);
+    });
+  }
 
-  // removeLike(cardId) {
-  //   return this._request(`${this._baseUrl}/cards/${cardId}/likes`, {
-  //     method: "DELETE",
-  //     headers: this._headers,
-  //   });
-  // }
+  // Quitar "me gusta"
+  removeLike(cardId) {
+    return fetch(`${this.baseUrl}/cards/${cardId}/likes`, {
+      method: "DELETE",
+      headers: this.headers,
+    }).then((res) => {
+      if (res.ok) return res.json();
+      return Promise.reject(`Error: ${res.status}`);
+    });
+  }
 }
