@@ -4,7 +4,6 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import Section from "../components/Section.js";
 import UserInfo from "../components/UserInfo.js";
-import Avatar from "../components/Avatar.js";
 import {
   initialCards,
   btnEditProfile,
@@ -12,7 +11,6 @@ import {
   containerList,
   nameInput,
   aboutInput,
-  imageInput,
   profileImageContainer,
 } from "../utils/constants.js";
 import Api from "../components/Api.js";
@@ -30,9 +28,6 @@ const api = new Api({
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   aboutSelector: ".profile__description",
-});
-
-const imageInfo = new Avatar({
   avatarSelector: ".profile__image",
 });
 
@@ -156,7 +151,7 @@ api
   .then((usersData) => {
     // actualizar la interfaz con los datos
     userInfo.setUserInfo(usersData);
-    imageInfo.setImageInfo(usersData);
+    usersData.updateLikes(usersData);
   })
   .catch((error) => {
     console.log(error + " al cargar información");
@@ -164,6 +159,7 @@ api
 
 // Editar el perfil
 const popupEditProfile = new PopupWithForm("#edit-popup", (data) => {
+  popupEditProfile.renderLoading(true);
   api
     .updateUserInfo(data)
     .then((updatedUserData) => {
@@ -173,6 +169,10 @@ const popupEditProfile = new PopupWithForm("#edit-popup", (data) => {
     })
     .catch((error) => {
       console.log(error);
+    })
+    .finally(() => {
+      //Restaurar el botón (SIEMPRE se ejecuta)
+      popupEditProfile.renderLoading(false);
     });
 });
 popupEditProfile.setEventListeners();
@@ -191,15 +191,20 @@ btnEditProfile.addEventListener("click", () => {
 
 ///Ventana emergente para Edital foto de perfil
 const editAvatarPopup = new PopupWithForm("#edit-avatar", (avatarData) => {
+  editAvatarPopup.renderLoading(true);
   api
     .updateAvatar(avatarData)
     .then((userData) => {
-      imageInfo.setImageInfo(userData);
+      userInfo.setUserInfo(userData);
       editAvatarPopup.close();
       editAvatarPopup.formElement.reset();
     })
     .catch((error) => {
       console.log(error + " al agregar foto de perfil");
+    })
+    .finally(() => {
+      //Restaurar el botón (SIEMPRE se ejecuta)
+      editAvatarPopup.renderLoading(false);
     });
 });
 editAvatarPopup.setEventListeners();
@@ -211,6 +216,7 @@ profileImageContainer.addEventListener("click", () => {
 
 // Agregar una nueva tarjeta
 const popupCreateCard = new PopupWithForm("#new-card-popup", (data) => {
+  popupCreateCard.renderLoading(true);
   api
     .addCard(data)
     .then((card) => {
@@ -220,6 +226,10 @@ const popupCreateCard = new PopupWithForm("#new-card-popup", (data) => {
     })
     .catch((error) => {
       console.log(error + " al agregar tarjeta");
+    })
+    .finally(() => {
+      //Restaurar el botón (SIEMPRE se ejecuta)
+      popupCreateCard.renderLoading(false);
     });
 });
 popupCreateCard.setEventListeners();
