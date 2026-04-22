@@ -4,6 +4,7 @@ import PopupWithImage from "../components/PopupWithImage.js";
 import PopupWithForm from "../components/PopupWithForm.js";
 import Section from "../components/Section.js";
 import UserInfo from "../components/UserInfo.js";
+import Avatar from "../components/Avatar.js";
 import {
   initialCards,
   btnEditProfile,
@@ -11,6 +12,8 @@ import {
   containerList,
   nameInput,
   aboutInput,
+  imageInput,
+  profileImageContainer,
 } from "../utils/constants.js";
 import Api from "../components/Api.js";
 import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
@@ -27,6 +30,10 @@ const api = new Api({
 const userInfo = new UserInfo({
   nameSelector: ".profile__title",
   aboutSelector: ".profile__description",
+});
+
+const imageInfo = new Avatar({
+  avatarSelector: ".profile__image",
 });
 
 const imagePopup = new PopupWithImage("#image-popup");
@@ -54,6 +61,20 @@ function renderCard(data) {
           .catch(console.log);
       });
     },
+    (card) => {
+      const request = card.isLiked
+        ? api.removeLike(card._id)
+        : api.addLike(card._id);
+
+      request
+        .then((updatedCard) => {
+          card.updateLikes(updatedCard.isLiked);
+          card.isLiked = updatedCard.isLiked;
+        })
+        .catch((error) => {
+          console.log(error + " al actualizar like");
+        });
+    },
   );
   const cardElement = card.generateCard();
   containerList.prepend(cardElement);
@@ -76,6 +97,7 @@ function validationInputs() {
 
 validationInputs();
 
+//Ventana emergente para eliminar tarjeta
 const popupWithConfirmation = new PopupWithConfirmation("#delete-popup");
 popupWithConfirmation.setEventListeners();
 
@@ -105,16 +127,15 @@ api
               .catch(console.log);
           });
         },
-        (cardId, isLiked) => {
-          // Decidir qué método usar según el estado actual
-          const likeMethod = isLiked
-            ? api.removeLike(cardId)
-            : api.addLike(cardId);
+        (card) => {
+          const request = card.isLiked
+            ? api.removeLike(card._id)
+            : api.addLike(card._id);
 
-          likeMethod
+          request
             .then((updatedCard) => {
-              // El servidor devuelve la tarjeta actualizada
               card.updateLikes(updatedCard.isLiked);
+              card.isLiked = updatedCard.isLiked;
             })
             .catch((error) => {
               console.log(error + " al actualizar like");
@@ -127,6 +148,18 @@ api
   })
   .catch((error) => {
     console.log(error + " al crear tarjetas");
+  });
+
+// Cargar información del usuario
+api
+  .getUserInfo()
+  .then((usersData) => {
+    // actualizar la interfaz con los datos
+    userInfo.setUserInfo(usersData);
+    imageInfo.setImageInfo(usersData);
+  })
+  .catch((error) => {
+    console.log(error + " al cargar información");
   });
 
 // Editar el perfil
@@ -156,16 +189,25 @@ btnEditProfile.addEventListener("click", () => {
   validationInputs();
 });
 
-// Cargar información del usuario
-api
-  .getUserInfo()
-  .then((usersData) => {
-    // actualizar la interfaz con los datos
-    userInfo.setUserInfo(usersData);
-  })
-  .catch((error) => {
-    console.log(error + " al cargar información");
-  });
+///Ventana emergente para Edital foto de perfil
+const editAvatarPopup = new PopupWithForm("#edit-avatar", (avatarData) => {
+  api
+    .updateAvatar(avatarData)
+    .then((userData) => {
+      imageInfo.setImageInfo(userData);
+      editAvatarPopup.close();
+      editAvatarPopup.formElement.reset();
+    })
+    .catch((error) => {
+      console.log(error + " al agregar foto de perfil");
+    });
+});
+editAvatarPopup.setEventListeners();
+
+profileImageContainer.addEventListener("click", () => {
+  editAvatarPopup.open();
+  validationInputs();
+});
 
 // Agregar una nueva tarjeta
 const popupCreateCard = new PopupWithForm("#new-card-popup", (data) => {

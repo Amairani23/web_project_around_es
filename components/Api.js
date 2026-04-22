@@ -4,7 +4,7 @@ export default class Api {
     this.headers = options.headers;
   }
 
-  //Muestra información del usuario
+  // Muestra información del usuario
   getUserInfo() {
     return fetch(`${this.baseUrl}/users/me`, {
       headers: this.headers,
@@ -16,7 +16,7 @@ export default class Api {
     });
   }
 
-  //Muestra las tarjetas
+  // Muestra las tarjetas
   getInitialCards() {
     return fetch(`${this.baseUrl}/cards`, {
       headers: this.headers,
@@ -28,7 +28,7 @@ export default class Api {
     });
   }
 
-  //Edita información del usuario
+  // Edita información del usuario
   updateUserInfo(userData) {
     return fetch(`${this.baseUrl}/users/me`, {
       method: "PATCH",
@@ -36,6 +36,22 @@ export default class Api {
       body: JSON.stringify({
         name: userData.name,
         about: userData.about,
+      }),
+    }).then((res) => {
+      if (res.ok) {
+        return res.json();
+      }
+      return Promise.reject(`Error: ${res.status}`);
+    });
+  }
+
+  // Editar foto de perfil
+  updateAvatar(avatarData) {
+    return fetch(`${this.baseUrl}/users/me/avatar`, {
+      method: "PATCH",
+      headers: this.headers,
+      body: JSON.stringify({
+        avatar: avatarData.avatar,
       }),
     }).then((res) => {
       if (res.ok) {

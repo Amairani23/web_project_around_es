@@ -32,3 +32,9 @@ export const nameInput = document.querySelector(".popup__input_type_name");
 export const aboutInput = document.querySelector(
   ".popup__input_type_description",
 );
+export const imageInput = document.querySelector(
+  ".popup__input_type_avatar-url",
+);
+export const profileImageContainer = document.querySelector(
+  ".profile__image-container",
+);

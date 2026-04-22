@@ -37,14 +37,14 @@ export default class Card {
 
   //Activa o Desactiva el botón
   updateLikes(isLiked) {
-    const likeButton = this._element.querySelector(".card__like-button");
+    const button = this._element.querySelector(".card__like-button");
+
     if (isLiked) {
-      likeButton.classList.add("card__like-button_is-active");
+      button.classList.add("card__like-button_is-active");
     } else {
-      likeButton.classList.remove("card__like-button_is-active");
+      button.classList.remove("card__like-button_is-active");
     }
   }
-
   //Elimina tarjeta del DOM
   removeCard() {
     this._element.remove();
@@ -56,7 +56,7 @@ export default class Card {
     this._element
       .querySelector(".card__like-button")
       .addEventListener("click", () => {
-        this._handleLikeClick(this._id, this.isLiked);
+        this._handleLikeClick(this);
       });
 
     this._element
