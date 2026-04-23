@@ -100,6 +100,8 @@ popupWithConfirmation.setEventListeners();
 api
   .getInitialCards()
   .then((cardsData) => {
+    console.log(cardsData);
+
     //Renderizar las tarjetas en la página
     cardsData.forEach((cardData) => {
       const card = new Card(
@@ -139,6 +141,16 @@ api
       );
       const cardElement = card.generateCard();
       containerList.append(cardElement);
+
+      if (cardData.isLiked)
+        api
+          .addLike(cardData._id)
+          .then((updatedCard) => {
+            card.updateLikes(updatedCard.isLiked);
+          })
+          .catch((error) => {
+            console.log(error + " al actualizar like en segundo plano");
+          });
     });
   })
   .catch((error) => {
@@ -151,7 +163,6 @@ api
   .then((usersData) => {
     // actualizar la interfaz con los datos
     userInfo.setUserInfo(usersData);
-    usersData.updateLikes(usersData);
   })
   .catch((error) => {
     console.log(error + " al cargar información");

@@ -37,6 +37,7 @@
     "description description";
   grid-template-columns: minmax(auto, 373px) auto;
   grid-gap: 7px 17px;
+  margin-left: 30px;
 }
 
 .profile__title {
