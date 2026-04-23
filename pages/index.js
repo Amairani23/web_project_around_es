@@ -100,8 +100,6 @@ popupWithConfirmation.setEventListeners();
 api
   .getInitialCards()
   .then((cardsData) => {
-    console.log(cardsData);
-
     //Renderizar las tarjetas en la página
     cardsData.forEach((cardData) => {
       const card = new Card(
