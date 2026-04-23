@@ -96,6 +96,22 @@ validationInputs();
 const popupWithConfirmation = new PopupWithConfirmation("#delete-popup");
 popupWithConfirmation.setEventListeners();
 
+//Administra las listas en el DOM
+// const cardList = new Section(
+//   {
+//     items: initialCards,
+//     renderer: (item) => {
+//       const card = new Card(item, "#cards-template", (src) => {
+//         imagePopup.open(src);
+//       });
+//       return card.generateCard();
+//     },
+//   },
+//   ".cards__list",
+// );
+
+// cardList.renderItems();
+
 // Cargar tarjetas desde el servidor
 api
   .getInitialCards()
