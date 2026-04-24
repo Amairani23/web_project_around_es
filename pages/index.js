@@ -71,8 +71,7 @@ function renderCard(data) {
         });
     },
   );
-  const cardElement = card.generateCard();
-  containerList.prepend(cardElement);
+  return card.generateCard();
 }
 
 //Validación de formulario
