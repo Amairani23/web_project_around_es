@@ -9,6 +9,7 @@ import {
   btnCreateCard,
   nameInput,
   aboutInput,
+  containerList,
   profileImageContainer,
 } from "../utils/constants.js";
 import Api from "../components/Api.js";
@@ -69,6 +70,7 @@ function renderCard(data) {
         });
     },
   );
+
   return card.generateCard();
 }
 
@@ -180,7 +182,7 @@ const popupCreateCard = new PopupWithForm("#new-card-popup", (data) => {
   api
     .addCard(data)
     .then((card) => {
-      renderCard(card);
+      containerList.prepend(renderCard(card));
       popupCreateCard.close();
       popupCreateCard.formElement.reset();
     })
