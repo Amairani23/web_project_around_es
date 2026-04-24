@@ -6,14 +6,14 @@ Con el objetivo de mejorar la interacción del usuario y la experiencia general,
 
 ## Funcionalidades a implementar:
 
-1 - Muestra la información del usuario desde el servidor.
-2 - Muestra las tarjetas desde el servidor.
-3 - Edita el perfil y actualiza foto de perfil.
-4 - Agrega una nueva tarjeta.
-5 - Elimina una tarjeta.
-6 - Añade y elimina "me gusta”.
-7 - Crear una ventana de formularios (popup) para agregar una tarjeta, actualizar foto de perfil y editar datos del perfil.
-8 - Crear una ventana emergente (popup) para eliminar una tarjeta.
+1. Muestra la información del usuario desde el servidor.
+2. Muestra las tarjetas desde el servidor.
+3. Edita el perfil y actualiza foto de perfil.
+4. Agrega una nueva tarjeta.
+5. Elimina una tarjeta.
+6. Añade y elimina "me gusta”.
+7. Crear una ventana de formularios (popup) para agregar una tarjeta, actualizar foto de perfil y editar datos del perfil.
+8. Crear una ventana emergente (popup) para eliminar una tarjeta.
 
 ## Metodología BEM.
 
