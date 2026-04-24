@@ -96,80 +96,18 @@ validationInputs();
 const popupWithConfirmation = new PopupWithConfirmation("#delete-popup");
 popupWithConfirmation.setEventListeners();
 
-//Administra las listas en el DOM
-// const cardList = new Section(
-//   {
-//     items: initialCards,
-//     renderer: (item) => {
-//       const card = new Card(item, "#cards-template", (src) => {
-//         imagePopup.open(src);
-//       });
-//       return card.generateCard();
-//     },
-//   },
-//   ".cards__list",
-// );
-
-// cardList.renderItems();
-
 // Cargar tarjetas desde el servidor
-api
-  .getInitialCards()
-  .then((cardsData) => {
-    //Renderizar las tarjetas en la página
-    cardsData.forEach((cardData) => {
-      const card = new Card(
-        cardData,
-        "#cards-template",
-        (src) => {
-          imagePopup.open(src);
-        },
-        () => {
-          popupWithConfirmation.setCard(card);
-          popupWithConfirmation.open();
+api.getInitialCards().then((cardsData) => {
+  const cardList = new Section(
+    {
+      items: cardsData,
+      renderer: (item) => renderCard(item),
+    },
+    ".cards__list",
+  );
 
-          popupWithConfirmation.setHandleSubmit((card) => {
-            api
-              .deleteCard(card._id)
-              .then(() => {
-                card.removeCard();
-                popupWithConfirmation.close();
-              })
-              .catch(console.log);
-          });
-        },
-        (card) => {
-          const request = card.isLiked
-            ? api.removeLike(card._id)
-            : api.addLike(card._id);
-
-          request
-            .then((updatedCard) => {
-              card.updateLikes(updatedCard.isLiked);
-              card.isLiked = updatedCard.isLiked;
-            })
-            .catch((error) => {
-              console.log(error + " al actualizar like");
-            });
-        },
-      );
-      const cardElement = card.generateCard();
-      containerList.append(cardElement);
-
-      if (cardData.isLiked)
-        api
-          .addLike(cardData._id)
-          .then((updatedCard) => {
-            card.updateLikes(updatedCard.isLiked);
-          })
-          .catch((error) => {
-            console.log(error + " al actualizar like en segundo plano");
-          });
-    });
-  })
-  .catch((error) => {
-    console.log(error + " al crear tarjetas");
-  });
+  cardList.renderItems();
+});
 
 // Cargar información del usuario
 api

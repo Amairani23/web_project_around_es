@@ -9,6 +9,7 @@ export default class Card {
     this._name = data.name;
     this._link = data.link;
     this._id = data._id;
+    this._isLike = data.isLiked;
     this._cardSelector = cardSelector;
     this._handleCardClick = handleCardClick;
     this._handleDeleteClick = handleDeleteClick;
@@ -28,6 +29,12 @@ export default class Card {
     this._element = this._getTemplate();
     this._setEventListeners();
 
+    this.btnLike = this._element.querySelector(".card__like-button");
+
+    if (this._isLike) {
+      this.btnLike.classList.add("card__like-button_is-active");
+    }
+
     this._element.querySelector(".card__title").textContent = this._name;
     this._element.querySelector(".card__image").alt = this._name;
     this._element.querySelector(".card__image").src = this._link;
@@ -37,8 +44,6 @@ export default class Card {
 
   //Activa o Desactiva el botón
   updateLikes(isLiked) {
-    this.btnLike = this._element.querySelector(".card__like-button");
-
     if (isLiked) {
       this.btnLike.classList.add("card__like-button_is-active");
     } else {
